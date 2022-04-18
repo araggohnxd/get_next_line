@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:43 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/13 12:40:49 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/17 23:42:06 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,18 @@ size_t	ft_strlen(const char *s)
 	return (size);
 }
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	size_t	i;
-	size_t	dst_len;
+	char	*start_dest;
+	char	*start_src;
 
-	dst_len = 0;
-	while (dst[dst_len] && dst_len < size)
-		dst_len++;
-	i = dst_len;
-	while (src[i - dst_len] && (i + 1) < size)
-	{
-		dst[i] = src[i - dst_len];
-		i++;
-	}
-	if (dst_len < size)
-		dst[i] = '\0';
-	return (dst_len + ft_strlen(src));
+	if (!dest || !src)
+		return (dest);
+	start_dest = (char *) dest;
+	start_src = (char *) src;
+	while (n-- > 0)
+		*start_dest++ = *start_src++;
+	return (dest);
 }
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
