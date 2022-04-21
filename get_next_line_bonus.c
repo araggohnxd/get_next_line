@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/21 18:36:02 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:48:08 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ static char	*ft_read(int fd, char *buffer, char *str)
 	{
 		i = 0;
 		read_ret = read(fd, buffer, BUFFER_SIZE);
-		buffer[read_ret] = '\0';
 		if (read_ret < 1)
 			break ;
+		buffer[read_ret] = '\0';
 		str = ft_realloc(str, j);
 		while (buffer[i] != '\n' && buffer[i])
 			str[j++] = buffer[i++];
@@ -84,15 +84,32 @@ static char	*ft_read(int fd, char *buffer, char *str)
 	return (str);
 }
 
+static void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	total;
+
+	total = nmemb * size;
+	if (nmemb != 0 && total / nmemb != size)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (!ptr)
+		return (NULL);
+	ft_memset(ptr, 0, nmemb * size);
+	return (ptr);
+}
+
 char	*get_next_line(int fd)
 {
-	static char	buffer[MAX_FD_VALUE][BUFFER_SIZE + 1];
+	static char	*buffer[MAX_FD_VALUE];
 	char		*str;
 
-	if (fd < 0 || BUFFER_SIZE < 1)
+	if (fd < 0 || fd > MAX_FD_VALUE || BUFFER_SIZE < 1)
 		return (NULL);
 	str = NULL;
-	if (ft_strchr(buffer[fd], '\n'))
+	if (!buffer[fd])
+		buffer[fd] = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+	else if (ft_strchr(buffer[fd], '\n'))
 	{
 		str = ft_handle_buffer(buffer[fd]);
 		if (ft_strchr(str, '\n'))

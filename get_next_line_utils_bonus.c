@@ -6,11 +6,21 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:43 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/21 18:37:17 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:47:55 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	char	*set;
+
+	set = s;
+	while (n-- > 0)
+		*set++ = c;
+	return (s);
+}
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
