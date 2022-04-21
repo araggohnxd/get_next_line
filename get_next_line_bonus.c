@@ -6,83 +6,97 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/13 14:21:15 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/21 18:36:02 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*ft_strjoin_free(char *s1, char *s2)
+static char	*ft_handle_buffer(char *buffer)
 {
-	char	*str;
-	size_t	s1_len;
-	size_t	s2_len;
+	size_t		i;
+	size_t		j;
+	char		*str;
 
-	if (!s1 || !s2)
+	i = 0;
+	j = 0;
+	while (buffer[i] != '\n')
+		i++;
+	ft_memcpy(buffer, &buffer[i + 1], (BUFFER_SIZE - i));
+	if (!*buffer)
 		return (NULL);
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	str = malloc(s1_len + s2_len + 1);
-	if (str == NULL)
+	str = malloc(sizeof(char) * (BUFFER_SIZE - i + 1));
+	if (!str)
 		return (NULL);
-	ft_strlcpy(str, s1, s1_len + 1);
-	ft_strlcat(str, s2, s1_len + s2_len + 1);
-	free(s1);
+	i = 0;
+	while (buffer[i] != '\n' && buffer[i])
+		str[j++] = buffer[i++];
+	if (buffer[i] == '\n')
+		str[j++] = '\n';
+	str[j] = '\0';
 	return (str);
 }
 
-static int	ft_read(int fd, char *chr_buffer, char *str_buffer)
+static char	*ft_realloc(char *str, size_t length)
 {
-	size_t	size;
+	char	*tmp;
+
+	if (!str)
+		str = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	else
+	{
+		tmp = malloc(sizeof(char) * (length + BUFFER_SIZE + 1));
+		ft_strlcpy(tmp, str, length + 1);
+		free(str);
+		str = tmp;
+	}
+	if (!str)
+		return (NULL);
+	return (str);
+}
+
+static char	*ft_read(int fd, char *buffer, char *str)
+{
+	size_t	i;
+	size_t	j;
 	int		read_ret;
 
-	size = 0;
-	while (size < BUFFER_SIZE)
+	j = ft_strlen(str);
+	read_ret = BUFFER_SIZE;
+	while (read_ret == BUFFER_SIZE)
 	{
-		read_ret = read(fd, chr_buffer, 1);
+		i = 0;
+		read_ret = read(fd, buffer, BUFFER_SIZE);
+		buffer[read_ret] = '\0';
 		if (read_ret < 1)
 			break ;
-		if (*chr_buffer != '\n')
-			str_buffer[size] = *chr_buffer;
-		if (*chr_buffer == '\n')
-		{
-			str_buffer[size] = '\n';
+		str = ft_realloc(str, j);
+		while (buffer[i] != '\n' && buffer[i])
+			str[j++] = buffer[i++];
+		if (buffer[i] == '\n')
+			str[j++] = '\n';
+		str[j] = '\0';
+		if (read_ret < BUFFER_SIZE || buffer[i] == '\n')
 			break ;
-		}
-		size++;
 	}
-	if (size >= BUFFER_SIZE || read_ret < 1)
-		str_buffer[size] = '\0';
-	else if (str_buffer[size] == '\n')
-		str_buffer[size + 1] = '\0';
-	if (read_ret > 0 && *chr_buffer != '\n')
-		return (1);
-	return (0);
+	if (read_ret < 1 && !str)
+		return (NULL);
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	chr_buffer;
-	char		*str_buffer;
-	char		*dup;
+	static char	buffer[MAX_FD_VALUE][BUFFER_SIZE + 1];
+	char		*str;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	str_buffer = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!str_buffer)
-		return (NULL);
-	dup = NULL;
-	while (ft_read(fd, &chr_buffer, str_buffer) || *str_buffer)
+	str = NULL;
+	if (ft_strchr(buffer[fd], '\n'))
 	{
-		if (!dup)
-			dup = ft_strdup(str_buffer);
-		else
-			dup = ft_strjoin_free(dup, str_buffer);
-		if (chr_buffer == '\n')
-			break ;
-		ft_memset(str_buffer, 0, ft_strlen(str_buffer));
+		str = ft_handle_buffer(buffer[fd]);
+		if (ft_strchr(str, '\n'))
+			return (str);
 	}
-	free(str_buffer);
-	str_buffer = NULL;
-	return (dup);
+	return (ft_read(fd, buffer[fd], str));
 }
