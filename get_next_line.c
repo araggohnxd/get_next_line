@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/21 17:39:52 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:50:39 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ static char	*ft_read(int fd, char *buffer, char *str)
 	{
 		i = 0;
 		read_ret = read(fd, buffer, BUFFER_SIZE);
-		buffer[read_ret] = '\0';
 		if (read_ret < 1)
 			break ;
+		buffer[read_ret] = '\0';
 		str = ft_realloc(str, j);
 		while (buffer[i] != '\n' && buffer[i])
 			str[j++] = buffer[i++];
@@ -89,7 +89,7 @@ char	*get_next_line(int fd)
 	static char	buffer[BUFFER_SIZE + 1];
 	char		*str;
 
-	if (fd < 0 || BUFFER_SIZE < 1)
+	if (fd < 0 || fd > MAX_FD_VALUE || BUFFER_SIZE < 1)
 		return (NULL);
 	str = NULL;
 	if (ft_strchr(buffer, '\n'))
