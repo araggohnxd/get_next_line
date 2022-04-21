@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/17 23:43:09 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/21 17:24:05 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+// get_next_line
 char	*get_next_line(int fd);
-void	*ft_memset(void *s, int c, size_t n);
-char	*ft_strdup(const char *s);
-size_t	ft_strlen(const char *s);
+
+// utils
+char	*ft_strchr(const char *s, int c);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
+size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 
 #endif
