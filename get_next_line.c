@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/21 19:50:39 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/22 13:52:11 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*ft_handle_buffer(char *buffer)
 	j = 0;
 	while (buffer[i] != '\n')
 		i++;
-	ft_memcpy(buffer, &buffer[i + 1], (BUFFER_SIZE - i));
+	ft_strlcpy(buffer, &buffer[i + 1], BUFFER_SIZE - i);
 	if (!*buffer)
 		return (NULL);
 	str = malloc(sizeof(char) * (BUFFER_SIZE - i + 1));
