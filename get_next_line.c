@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/22 13:52:11 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/22 14:24:40 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 static char	*ft_handle_buffer(char *buffer)
 {
 	size_t		i;
-	size_t		j;
 	char		*str;
 
 	i = 0;
-	j = 0;
 	while (buffer[i] != '\n')
 		i++;
 	ft_strlcpy(buffer, &buffer[i + 1], BUFFER_SIZE - i);
@@ -28,12 +26,7 @@ static char	*ft_handle_buffer(char *buffer)
 	str = malloc(sizeof(char) * (BUFFER_SIZE - i + 1));
 	if (!str)
 		return (NULL);
-	i = 0;
-	while (buffer[i] != '\n' && buffer[i])
-		str[j++] = buffer[i++];
-	if (buffer[i] == '\n')
-		str[j++] = '\n';
-	str[j] = '\0';
+	ft_newlinecpy(str, buffer, 0);
 	return (str);
 }
 
@@ -58,25 +51,19 @@ static char	*ft_realloc(char *str, size_t length)
 static char	*ft_read(int fd, char *buffer, char *str)
 {
 	size_t	i;
-	size_t	j;
 	int		read_ret;
 
-	j = ft_strlen(str);
+	i = ft_strlen(str);
 	read_ret = BUFFER_SIZE;
 	while (read_ret == BUFFER_SIZE)
 	{
-		i = 0;
 		read_ret = read(fd, buffer, BUFFER_SIZE);
 		if (read_ret < 1)
 			break ;
 		buffer[read_ret] = '\0';
-		str = ft_realloc(str, j);
-		while (buffer[i] != '\n' && buffer[i])
-			str[j++] = buffer[i++];
-		if (buffer[i] == '\n')
-			str[j++] = '\n';
-		str[j] = '\0';
-		if (read_ret < BUFFER_SIZE || buffer[i] == '\n')
+		str = ft_realloc(str, i);
+		i = ft_newlinecpy(str, buffer, i);
+		if (read_ret < BUFFER_SIZE || str[i - 1] == '\n')
 			break ;
 	}
 	if (read_ret < 1 && !str)

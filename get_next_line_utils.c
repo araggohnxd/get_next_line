@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:43 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/22 13:52:18 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/22 14:07:59 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,17 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	}
 	dst[i] = '\0';
 	return (src_len);
+}
+
+size_t	ft_newlinecpy(char *dst, const char *src, size_t index)
+{
+	size_t	i;
+
+	i = 0;
+	while (src[i] != '\n' && src[i])
+		dst[index++] = src[i++];
+	if (src[i] == '\n')
+		dst[index++] = '\n';
+	dst[index] = '\0';
+	return (index);
 }
