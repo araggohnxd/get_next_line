@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/21 19:48:08 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/22 14:55:33 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,34 @@
 static char	*ft_handle_buffer(char *buffer)
 {
 	size_t		i;
-	size_t		j;
 	char		*str;
 
 	i = 0;
-	j = 0;
 	while (buffer[i] != '\n')
 		i++;
-	ft_memcpy(buffer, &buffer[i + 1], (BUFFER_SIZE - i));
+	ft_strlcpy(buffer, &buffer[i + 1], BUFFER_SIZE - i);
 	if (!*buffer)
 		return (NULL);
 	str = malloc(sizeof(char) * (BUFFER_SIZE - i + 1));
 	if (!str)
 		return (NULL);
-	i = 0;
-	while (buffer[i] != '\n' && buffer[i])
-		str[j++] = buffer[i++];
-	if (buffer[i] == '\n')
-		str[j++] = '\n';
-	str[j] = '\0';
+	ft_newlinecpy(str, buffer, 0);
 	return (str);
+}
+
+static void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	total;
+
+	total = nmemb * size;
+	if (nmemb != 0 && total / nmemb != size)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (!ptr)
+		return (NULL);
+	ft_memset(ptr, 0, nmemb * size);
+	return (ptr);
 }
 
 static char	*ft_realloc(char *str, size_t length)
@@ -58,45 +66,24 @@ static char	*ft_realloc(char *str, size_t length)
 static char	*ft_read(int fd, char *buffer, char *str)
 {
 	size_t	i;
-	size_t	j;
 	int		read_ret;
 
-	j = ft_strlen(str);
+	i = ft_strlen(str);
 	read_ret = BUFFER_SIZE;
 	while (read_ret == BUFFER_SIZE)
 	{
-		i = 0;
 		read_ret = read(fd, buffer, BUFFER_SIZE);
 		if (read_ret < 1)
 			break ;
 		buffer[read_ret] = '\0';
-		str = ft_realloc(str, j);
-		while (buffer[i] != '\n' && buffer[i])
-			str[j++] = buffer[i++];
-		if (buffer[i] == '\n')
-			str[j++] = '\n';
-		str[j] = '\0';
-		if (read_ret < BUFFER_SIZE || buffer[i] == '\n')
+		str = ft_realloc(str, i);
+		i = ft_newlinecpy(str, buffer, i);
+		if (read_ret < BUFFER_SIZE || str[i - 1] == '\n')
 			break ;
 	}
 	if (read_ret < 1 && !str)
 		return (NULL);
 	return (str);
-}
-
-static void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*ptr;
-	size_t	total;
-
-	total = nmemb * size;
-	if (nmemb != 0 && total / nmemb != size)
-		return (NULL);
-	ptr = malloc(nmemb * size);
-	if (!ptr)
-		return (NULL);
-	ft_memset(ptr, 0, nmemb * size);
-	return (ptr);
 }
 
 char	*get_next_line(int fd)

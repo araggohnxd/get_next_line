@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:43 by maolivei          #+#    #+#             */
-/*   Updated: 2022/04/21 19:47:55 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/04/22 14:31:22 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,6 @@ void	*ft_memset(void *s, int c, size_t n)
 	while (n-- > 0)
 		*set++ = c;
 	return (s);
-}
-
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	char	*start_dest;
-	char	*start_src;
-
-	if (!dest || !src)
-		return (dest);
-	start_dest = (char *) dest;
-	start_src = (char *) src;
-	while (n-- > 0 && *start_src)
-		*start_dest++ = *start_src++;
-	*start_dest = '\0';
-	return (dest);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -80,4 +65,17 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	}
 	dst[i] = '\0';
 	return (src_len);
+}
+
+size_t	ft_newlinecpy(char *dst, const char *src, size_t index)
+{
+	size_t	i;
+
+	i = 0;
+	while (src[i] != '\n' && src[i])
+		dst[index++] = src[i++];
+	if (src[i] == '\n')
+		dst[index++] = '\n';
+	dst[index] = '\0';
+	return (index);
 }
