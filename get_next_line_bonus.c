@@ -6,7 +6,7 @@
 /*   By: maolivei <maolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:07:44 by maolivei          #+#    #+#             */
-/*   Updated: 2022/05/07 21:59:43 by maolivei         ###   ########.fr       */
+/*   Updated: 2022/05/08 23:51:05 by maolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*get_next_line(int fd)
 	static char	*buffer[MAX_FD_VALUE];
 	char		*str;
 
-	if (fd < 0 || fd > MAX_FD_VALUE || BUFFER_SIZE < 1)
+	if (fd < 0 || fd >= MAX_FD_VALUE || BUFFER_SIZE < 1)
 		return (NULL);
 	str = NULL;
 	if (!buffer[fd])
